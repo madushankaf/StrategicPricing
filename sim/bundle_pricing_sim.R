@@ -1,10 +1,10 @@
 set.seed(123) # set seed for reproducibility
 
 # Define parameters
-n_sim <- 10 # number of simulations
-n_customers <- 10 # number of customers
-base_price <- 10 # base price of each product
-discount <- 0.2 # discount for bundle pricing
+n_sim <- 10000 # number of simulations
+n_customers <- 10000 # number of customers
+base_price <- 100 # base price of each product
+discount <- 0.0 # discount for bundle pricing
 bundle_size <- 2 # number of products in the bundle
 mu <- log(50) # mean of log normal distribution for customer preference
 sigma <- 0.5 # standard deviation of log normal distribution for customer preference
@@ -17,6 +17,7 @@ for (i in 1:n_sim) {
   }
 }
 
+
 # Calculate demand and revenue for bundle pricing
 demand_bundle <- matrix(0, n_sim, n_customers)
 revenue_bundle <- matrix(0, n_sim, n_customers)
@@ -26,6 +27,8 @@ for (i in 1:n_sim) {
     revenue_bundle[i, j] <- ifelse(demand_bundle[i, j] == 1, (bundle_size * base_price * (1 - discount)), 0)
   }
 }
+
+
 
 # Calculate expected revenue for bundle pricing
 expected_revenue_bundle <- mean(rowSums(revenue_bundle))
