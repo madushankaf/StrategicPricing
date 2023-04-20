@@ -1,5 +1,5 @@
-simulate_bundle_pricing <- function(n_sim, n_customers, base_price, elasticity, discount, bundle_size, mu, sigma) {
-  set.seed(123)
+simulate_bundle_pricing <- function(n_sim, n_customers, base_price, elasticity, discount, bundle_size, mu, sigma, seed) {
+  set.seed(seed)
 
   # Simulate customer preferences for bundle pricing
   bundle_pref <- matrix(0, n_sim, n_customers)
@@ -32,8 +32,4 @@ simulate_bundle_pricing <- function(n_sim, n_customers, base_price, elasticity, 
 }
 
 # Call the function with the same parameters as in the original code
-simulate_bundle_pricing(
-  n_sim = 10000, n_customers = 10000, base_price = c(100, 120, 80),
-  elasticity = c(-2, -1, -0.5), discount = 0.0, bundle_size = 3,
-  mu = log(50), sigma = 0.5
-)
+# simulate_bundle_pricing( n_sim = 10000, n_customers = 10000, base_price = c(100, 120, 80),elasticity = c(-2, -1, -0.5), discount = 0.0, bundle_size = 3,mu = log(50), sigma = 0.5)

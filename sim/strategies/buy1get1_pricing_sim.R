@@ -1,5 +1,5 @@
-simulate_buy1get1_revenue <- function(n_sim, n_customers, base_price, discount, bundle_size, mu, sigma, e) {
-  set.seed(123) # set seed for reproducibility
+simulate_buy1get1_revenue <- function(n_sim, n_customers, base_price, discount, bundle_size, mu, sigma, e, seed) {
+  set.seed(seed) # set seed for reproducibility
 
   # Simulate customer preferences for buy 1 get 1 pricing
   buy1get1_pref <- matrix(0, n_sim, n_customers)
@@ -42,4 +42,4 @@ simulate_buy1get1_revenue <- function(n_sim, n_customers, base_price, discount, 
 }
 
 # Call the function with the provided parameters
-simulate_buy1get1_revenue(n_sim = 10000, n_customers = 10000, base_price = 100, discount = 0.0, bundle_size = 2, mu = log(50), sigma = 0.5, e = -1.5)
+# simulate_buy1get1_revenue(n_sim = 10000, n_customers = 10000, base_price = 100, discount = 0.0, bundle_size = 2, mu = log(50), sigma = 0.5, e = -1.5)

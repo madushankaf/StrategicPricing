@@ -1,8 +1,8 @@
 # Calculate optimal price and expected revenue for market pricing
-simulate_market_pricing <- function(n_sim, n_customers, base_cost, elasticity, sigma, discount) {
+simulate_market_pricing <- function(n_sim, n_customers, base_cost, elasticity, sigma, discount, seed) {
 
   # Set random seed for reproducibility
-  set.seed(123)
+  set.seed(seed)
 
   # Calculate optimal price
   optimal_price <- (1 + 1/elasticity) * base_cost
@@ -22,4 +22,4 @@ simulate_market_pricing <- function(n_sim, n_customers, base_cost, elasticity, s
 }
 
 
-simulate_market_pricing(n_sim = 10000, n_customers = 10000, base_price = 100, discount = 0.0, bundle_size = 2, mu = log(150), sigma = 0.5, elasticity = -1.5)
+# simulate_market_pricing(n_sim = 10000, n_customers = 10000, discount = 0.0,  sigma = 0.5, elasticity = -1.5)

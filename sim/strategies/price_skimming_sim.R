@@ -1,5 +1,5 @@
-simulate_price_skimming <- function(n_sim, n_customers, base_price, discount, bundle_size, mu, sigma, elasticity) {
-  set.seed(123) # set seed for reproducibility
+simulate_price_skimming <- function(n_sim, n_customers, base_price, discount, bundle_size, mu, sigma, elasticity, seed) {
+  set.seed(seed) # set seed for reproducibility
   
   # Simulate customer preferences for price skimming
   price_skimming_pref <- matrix(rlnorm(n_customers, mu, sigma), n_sim, n_customers)
@@ -16,4 +16,4 @@ simulate_price_skimming <- function(n_sim, n_customers, base_price, discount, bu
 }
 
 # Example usage:
-simulate_price_skimming(n_sim = 10000, n_customers = 10000, base_price = 100, discount = 0.0, bundle_size = 2, mu = log(150), sigma = 0.5, elasticity = -1.5)
+# simulate_price_skimming(n_sim = 10000, n_customers = 10000, base_price = 100, discount = 0.0, bundle_size = 2, mu = log(150), sigma = 0.5, elasticity = -1.5)

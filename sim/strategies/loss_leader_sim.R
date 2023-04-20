@@ -1,5 +1,5 @@
-simulate_loss_leader <- function(n_sim, n_customers, base_price, discount, mu, sigma, elasticity) {
-  set.seed(123) # set seed for reproducibility
+simulate_loss_leader <- function(n_sim, n_customers, base_price, discount, mu, sigma, elasticity, seed) {
+  set.seed(seed) # set seed for reproducibility
   
   # Simulate customer preferences for loss leader pricing
   loss_leader_pref <- matrix(rlnorm(n_customers, mu, sigma), n_sim, n_customers)
@@ -18,4 +18,4 @@ simulate_loss_leader <- function(n_sim, n_customers, base_price, discount, mu, s
 }
 
 
-simulate_loss_leader(n_sim = 10000, n_customers = 10000, base_price = 100, discount = 0.5, mu = log(50), sigma = 0.5, elasticity = -1.5)
+# simulate_loss_leader(n_sim = 10000, n_customers = 10000, base_price = 100, discount = 0.5, mu = log(50), sigma = 0.5, elasticity = -1.5)
