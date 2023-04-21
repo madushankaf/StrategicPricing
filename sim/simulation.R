@@ -1,10 +1,11 @@
-source("../strategies/bundle_pricing_sim.R")
-source("../strategies/market_price_sim.R")
-source("../strategies/price_skimming_sim.R")
-source("../strategies/buy1get1_pricing_sim.R")
-source("../strategies/loss_leader_sim.R")
+source("./strategies/bundle_pricing_sim.R")
+source("./strategies/market_price_sim.R")
+source("./strategies/price_skimming_sim.R")
+source("./strategies/buy1get1_pricing_sim.R")
+source("./strategies/loss_leader_sim.R")
 
 library(GNE)
+library(nleqslv)
 
 set.seed(123)
 seed <- sample(1:100, 1)
@@ -79,8 +80,26 @@ for (i in 1:5) {
 game_matrix[5, ] <- payoffs_A_price_skim
 game_matrix[6:10, 5] <- payoffs_B_price_skim
 
+n_players <- 2
+n_strategies <- 5
+br <- list()
+for (i in 1:n_players) {
+  for (j in 1:n_strategies) {
+    br_fun <- function(x) {
+      opponent_strategies <- x[-i]
+      my_strategy <- x[i]
+      payoffs <- game_matrix[((i - 1) * n_strategies + j), ]
+      my_payoff <- payoffs[my_strategy]
+      opponent_payoffs <- payoffs[opponent_strategies]
+      expected_opponent_payoff <- sum(opponent_payoffs) / (n_strategies - 1)
+      c(my_payoff - expected_opponent_payoff)
+    }
+    br[[j + (i - 1) * n_strategies]] <- br_fun
+  }
+}
 
-nash_eq <- gne(game_matrix)
+
+nash_eq <- GNE(br, rep(1 / n_strategies, n_players), approach = "minimization", tol = 1e-10, max_iter = 1000, verbose = TRUE, method = "Nelder-Mead", control = list(fnscale = -1))
 
 
 print(game_matrix)
