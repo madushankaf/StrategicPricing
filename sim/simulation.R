@@ -18,7 +18,7 @@ actions_2 <- c("bundle_pricing", "buy1_get1", "loss_leader", "market_pricing", "
 
 game_matrix <- matrix(rep(0, 50), nrow = 10, byrow = TRUE)
 
-n_sim <- 100
+n_sim <- 10
 
 # bundling strategy
 payoffs_A_bundle <- numeric(length = 5)
@@ -80,27 +80,52 @@ for (i in 1:5) {
 game_matrix[5, ] <- payoffs_A_price_skim
 game_matrix[6:10, 5] <- payoffs_B_price_skim
 
+print(game_matrix)
+
 n_players <- 2
 n_strategies <- 5
-br <- list()
-for (i in 1:n_players) {
-  for (j in 1:n_strategies) {
-    br_fun <- function(x) {
-      opponent_strategies <- x[-i]
-      my_strategy <- x[i]
-      payoffs <- game_matrix[((i - 1) * n_strategies + j), ]
-      my_payoff <- payoffs[my_strategy]
-      opponent_payoffs <- payoffs[opponent_strategies]
-      expected_opponent_payoff <- sum(opponent_payoffs) / (n_strategies - 1)
-      c(my_payoff - expected_opponent_payoff)
+
+compl <- function(x, lam) {
+  n <- length(x)
+  m <- length(lam)
+  out <- rep(0, n + m)
+  for (i in 1:n) {
+    for (j in 1:m) {
+      if (i == j) {
+        out[i] <- out[i] + x[i] * lam[j]
+      } else {
+        out[i] <- out[i] + x[j] * game_matrix[i, j]
+      }
     }
-    br[[j + (i - 1) * n_strategies]] <- br_fun
   }
+  return(out)
+}
+
+heobj <- function(x, i, j, k) {
+    2 * (i == j && j == k)
 }
 
 
-nash_eq <- GNE(br, rep(1 / n_strategies, n_players), approach = "minimization", tol = 1e-10, max_iter = 1000, verbose = TRUE, method = "Nelder-Mead", control = list(fnscale = -1))
+grobj <- function(x, i, j) {
+  if (i == 1) {
+    # Player 1's payoff function
+    res <- (sum(game_matrix[1:n_strategies, ] * c(x[1:n_strategies], rep(1, n_strategies)))) # nolint
+  } else {
+    # Player 2's payoff function
+    res <- (sum(game_matrix[(n_strategies + 1):(2 * n_strategies), ] * c(rep(1, n_strategies), x[(n_strategies + 1):(2 * n_strategies)]))) # nolint
+  }
+  res[j]
+}
+
+dimx <- rep(n_strategies, n_players)
+dimlam <- rep(0, n_players)
+
+z0 <- rep(0, sum(dimx) + sum(dimlam))
+
+result <- GNE.nseq(z0, dimx, dimlam, grobj = grobj, heobj = heobj, compl = phiFB, gcompla = GrAphiFB, gcomplb = GrBphiFB, method = "Broyden", control = list(trace = 1))
 
 
-print(game_matrix)
-print(nash_eq)
+eq <- result$z[1:n_strategies]
+print(result)
+# Print the Nash equilibrium
+cat("Nash equilibrium:", eq)
